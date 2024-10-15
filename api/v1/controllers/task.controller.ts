@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import paginationHelper from "../../../helpers/pagination"
 
 import Task from "../model/task.model"
+import searchHelper from "../../../helpers/search"
 
 export const index = async (req: Request, res: Response) => {
 
@@ -9,7 +10,8 @@ export const index = async (req: Request, res: Response) => {
   //- interface
   interface Find {
     deleted: boolean,
-    status?: string
+    status?: string,
+    title?: RegExp
   }
 
 
@@ -22,6 +24,13 @@ export const index = async (req: Request, res: Response) => {
     find.status = req.query.status.toString() //- Neu co query thi nen chuyen no thanh string
   }
   //-end find
+
+  //-tim kiem
+  const objSearch = searchHelper(req.query)
+  if (req.query.keyword) {
+    find.title = objSearch.regex
+  }
+  //-end tim kiem
 
   //start Phan trang
   const countTask = await Task.countDocuments(find)
