@@ -119,6 +119,20 @@ export const changeMultiStatus = async (req: Request, res: Response) => {
         })
         break;
 
+      case "delete":
+        await Task.updateMany({
+          _id: { $in: ids }
+        }, {
+          deleted: true,
+          deletedAt: new Date() //-them key nay vao documen 
+        })
+
+        res.json({
+          code: 200,
+          message: "Xoá thành công"
+        })
+        break;
+
       default:
         break
     }
