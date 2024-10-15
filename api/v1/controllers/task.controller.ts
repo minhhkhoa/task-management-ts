@@ -4,9 +4,24 @@ import { Request, Response } from "express"
 import Task from "../model/task.model"
 
 export const index = async (req: Request, res: Response) => {
-  const tasks = await Task.find({
-    deleted: false
-  })
+
+  //- interface
+  interface Find {
+    deleted: boolean,
+    status?: string
+  }
+
+
+  const find: Find = {
+    deleted: false,
+  }
+
+  if (req.query.status){
+    // find["status"] = req.query.status //- lam nhu nay hoac interface
+    find.status = req.query.status.toString() //- Neu co query thi nen chuyen no thanh string
+  }
+
+  const tasks = await Task.find(find)
   res.json(tasks)
 }
 
