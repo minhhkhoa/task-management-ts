@@ -5,6 +5,7 @@ import Task from "../model/task.model"
 
 export const index = async (req: Request, res: Response) => {
 
+  //- Find
   //- interface
   interface Find {
     deleted: boolean,
@@ -20,8 +21,17 @@ export const index = async (req: Request, res: Response) => {
     // find["status"] = req.query.status //- lam nhu nay hoac interface
     find.status = req.query.status.toString() //- Neu co query thi nen chuyen no thanh string
   }
+  //-end find
 
-  const tasks = await Task.find(find)
+  //-sort
+  const sort = {}
+  if(req.query.sortKey  && req.query.sortValue){
+    sort[`${req.query.sortKey}`] = req.query.sortValue.toString() //- Neu co query thi nen chuyen no thanh string
+
+  }
+  //-end sort
+
+  const tasks = await Task.find(find).sort(sort)
   res.json(tasks)
 }
 
