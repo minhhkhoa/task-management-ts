@@ -19,7 +19,7 @@ export const index = async (req: Request, res: Response) => {
     deleted: false,
   }
 
-  if (req.query.status){
+  if (req.query.status) {
     // find["status"] = req.query.status //- lam nhu nay hoac interface
     find.status = req.query.status.toString() //- Neu co query thi nen chuyen no thanh string
   }
@@ -47,7 +47,7 @@ export const index = async (req: Request, res: Response) => {
 
   //-sort
   const sort = {}
-  if(req.query.sortKey  && req.query.sortValue){
+  if (req.query.sortKey && req.query.sortValue) {
     sort[`${req.query.sortKey}`] = req.query.sortValue.toString() //- Neu co query thi nen chuyen no thanh string
 
   }
@@ -70,4 +70,31 @@ export const detail = async (req: Request, res: Response) => {
     deleted: false
   })
   res.json(task)
+}
+
+export const changeStatus = async (req: Request, res: Response) => {
+  try {
+    //-lay ra id can update
+    const id: string = req.params.id
+
+    //- thứ muốn cập nhật(nội dung cập nhật cho status mà front-end y/c)
+    const status: string = req.body.status
+
+    //-update
+    await Task.updateOne({
+      _id: id,
+    }, {
+      status: status
+    })
+
+    res.json({
+      code: 200, // cap nhat thanh cong
+      message: "Cập nhật trạng thái thành công"
+    })
+  } catch (error) {
+    res.json({
+      code: 400, // cap nhat thanh cong
+      message: "Không tồn tại"
+    })
+  }
 }
